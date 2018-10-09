@@ -3,6 +3,7 @@ var port = 4200;
 var express = require('express');
 var app = express();
 var path = require('path');
+var foodGenerator = require('./foodGenerator.js');
 
 // Start express app
 app.use(express.static(__dirname + '/pub'));
@@ -52,3 +53,7 @@ function updateDirection() {
   deltaY = dotMoveSpeed * Math.sin(dotDirection);
   deltaX = dotMoveSpeed * Math.cos(dotDirection);
 }
+
+setInterval(() => {
+	io.emit('generateFood', foodGenerator.generateFood());
+}, 5000);
