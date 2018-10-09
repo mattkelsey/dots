@@ -13,5 +13,14 @@ window.onload = function() {
 			ctx.stroke();
 			ctx.restore();
 		});
+
+        socket.on('generateFood', function (data) {
+			console.log("generating food");
+			ctx.save();
+            ctx.beginPath();
+            ctx.rect(data.x, data.y, 2, 2);
+            ctx.fillStyle = "red";
+            ctx.fill();
+		});
 	}
 }
