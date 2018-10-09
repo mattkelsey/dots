@@ -13,6 +13,7 @@ window.onload = function() {
 		ctx.stroke();
 
 		socket.on('move', function (data) {
+      console.log(data.x, data.y);
  			ctx.clearRect(borderWidth/2, borderWidth/2, canvas.width-borderWidth, canvas.height-borderWidth);
 			ctx.save();
       ctx.beginPath();
@@ -20,13 +21,13 @@ window.onload = function() {
 			ctx.fill();
 		});
 
-        socket.on('generateFood', function (data) {
-			console.log("generating food");
-			ctx.save();
-            ctx.beginPath();
-            ctx.rect(data.x, data.y, 2, 2);
-            ctx.fillStyle = "red";
-            ctx.fill();
+    socket.on('generateFood', function (data) {
+      console.log("generating food");
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(data.x, data.y, 2, 2);
+      ctx.fillStyle = "red";
+      ctx.fill();
 		});
 	}
 }

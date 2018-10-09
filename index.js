@@ -1,59 +1,32 @@
+"use strict";
+exports.__esModule = true;
+var socketio = require("socket.io");
+var FoodGenerator_1 = require("./src/FoodGenerator");
+var express = require("express");
+var Dot_1 = require("./src/Dot");
 var port = 4200;
-
-var express = require('express');
 var app = express();
-var path = require('path');
-var foodGenerator = require('./foodGenerator.js');
-
 // Start express app
 app.use(express.static(__dirname + '/pub'));
 app.set('view engine', 'ejs');
-
-app.get('/', function(req, res) {
-    res.render('chat')
-})
-
-var io = require('socket.io').listen(app.listen(port));
-
-io.sockets.on('connection', function (socket) {
-	console.log("connection was made");
-	socket.on('disconnect', () => {
-		clearInterval();
-		console.log("intervals were cleared");
-	});
+app.get('/', function (req, res) {
+    res.render('chat');
 });
-
-var dotMoveSpeed = 1;
-var dotX = 250;
-var dotY = 250;
-var dotDirection = 1*Math.PI;
-var deltaX;
-var deltaY;
-updateDirection();
-setInterval(() => {
-	if(dotX >= 1000) {
-		deltaX = -Math.abs(deltaX);
-	} else if (dotX <= 0) {
-		deltaX = Math.abs(deltaX);
-	} else if (dotY >= 1000) {
-		deltaY = -Math.abs(deltaY);
-	} else if (dotY <= 0) {
-		deltaY = Math.abs(deltaY);
-	}
-	dotY += deltaY;
-	dotX += deltaX;
-	console.log(deltaX, deltaY);
-	io.emit('move', { x: dotX, y: dotY });
+var io = socketio.listen(app.listen(port));
+io.sockets.on('connection', function (socket) {
+    socket.on('disconnect', function () {
+        clearInterval();
+    });
+});
+var jim = new Dot_1["default"](250, 250);
+setInterval(function () {
+    jim.tick();
+    console.log(jim.x, jim.x);
+    io.emit('move', { x: jim.x, y: jim.y });
 }, 10);
-
-setInterval(updateDirection, 2000);
-
-function updateDirection() {
-	dotDirection = Math.random() * 2*Math.PI;
-  deltaY = dotMoveSpeed * Math.sin(dotDirection);
-  deltaX = dotMoveSpeed * Math.cos(dotDirection);
-}
-
-setInterval(() => {
-	io.emit('generateFood', foodGenerator.generateFood());
+setInterval(function () {
+    jim.recomputePath();
+}, 2000);
+setInterval(function () {
+    io.emit('generateFood', FoodGenerator_1["default"].generateFood());
 }, 5000);
