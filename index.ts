@@ -1,7 +1,7 @@
 import * as socketio from "socket.io";
 import FoodGenerator from './src/FoodGenerator';
 import * as express from 'express';
-import Dot from './src/Dot'
+import { Dot } from './src/Dot'
 
 const port = 4200
 

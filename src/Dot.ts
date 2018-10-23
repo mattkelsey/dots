@@ -1,4 +1,4 @@
-export default class Dot {
+export class Dot {
   public x: number;
   public y: number;
   private dotDirection: number;
